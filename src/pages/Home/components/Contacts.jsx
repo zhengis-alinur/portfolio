@@ -41,7 +41,7 @@ const Contacts = () => {
 
 	return (
 		<>
-			<div ref={alertRef} className="fixed top-[-40px] left-0 flex items-center justify-center w-screen">
+			<div ref={alertRef} className="fixed z-50 top-[-40px] left-0 flex items-center justify-center w-screen">
 				<p className='w-fit rounded-md p-1 bg-gray text-black'>Copied!</p>
 			</div>
 			<div id="contacts" className='bg-primary bg-opacity-20'>
