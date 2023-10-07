@@ -5,7 +5,9 @@ const CiteSection = () => {
 	<div >
 		<Cite
 			className="mx-auto"
-			cite="Many of life's failures are people who did not realize how close they were to success when they gave up." author="Thomas Alva Edison" />
+			cite="" author={<p>- Thomas Alva Edison</p>} >
+				<p className="text-xl">Many of life&apos;s failures are people who did not realize how close they were to success when they gave up.</p>
+			</Cite>
 	</div>
   )
 }

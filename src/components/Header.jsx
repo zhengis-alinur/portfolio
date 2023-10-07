@@ -2,7 +2,7 @@ import Logo from '../components/Logo';
 import {useContext} from 'react';
 import { SectionContext } from './Layout';
 
-const navItems = ['home', 'experience', 'works', 'skills', 'about-me', 'contacts']
+const navItems = ['home', 'experience', 'works', 'skills', 'about-me', 'recomendations', 'contacts']
 
 const NavBarItem = (props) => (
 	<li className="flex items-center cursor-pointer">

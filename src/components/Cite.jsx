@@ -10,10 +10,10 @@ const Cite = (props) => {
 	<div className={`flex flex-col items-end w-fit  max-w-4xl ${props.className}`}>
 		<div className="relative border-2 p-8 border-gray">
 			<CiteSign className="absolute left-2 top-[-15px]" />
-			<p className="text-xl">{props.cite}</p>
+			{props.children}
 			<CiteSign className="absolute right-2 bottom-[-15px]" />
 		</div>
-		<p className=" border-2 p-4 text-xl border-gray w-fit border-t-0">-{props.author}</p>
+		<div className="border-2 p-4 text-xl border-gray w-fit border-t-0">{props.author}</div>
 	</div>
   )
 }

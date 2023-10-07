@@ -53,7 +53,7 @@ const Projects = () => {
 		}
 	]
 	return (
-		<div  id="works">
+		<div id="works">
 			<SectionTitle title='projects'/>
 			<div className="flex flex-col items-center justify-center flex-wrap gap-5 md:flex-row md:items-start" >
 				{projects.map((project, index) => <Project key={index} project={project}/>)}

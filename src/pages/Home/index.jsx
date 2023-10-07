@@ -5,6 +5,7 @@ import Skills from "./components/Skills"
 import AboutMe from "./components/AboutMe"
 import Contacts from "./components/Contacts"
 import Experience from "./components/Experience"
+import Recomendations from "./components/Recomendations"
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
 		<Projects />
 		<Skills />
 		<AboutMe />
+		<Recomendations />
 		<Contacts />
 	</div>
   )
