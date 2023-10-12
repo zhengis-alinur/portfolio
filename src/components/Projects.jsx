@@ -67,6 +67,22 @@ const Projects = ({full}) => {
 			description:"Landing Page",
 			deploy: "https://aiym.onrender.com/",
 			code: "https://github.com/zhengis-alinur/aiym-page"
+		},
+		{
+			picture: "bukable.jpg",
+			stack:  ['React', 'SCSS', 'Javascript'],
+			name: "Bukable Landing Page",
+			description:"Landing Page",
+			deploy: "https://bukable-intern-alinur.netlify.app/",
+			code: "https://github.com/zhengis-alinur/bukable"
+		},
+		{
+			picture: "piano.jpg",
+			stack:  ['HTML', 'CSS', 'Javascript'],
+			name: "Virtual Piano",
+			description:"Landing Page",
+			deploy: "https://rolling-scopes-school.github.io/zhengis-alinur-JSFE2021Q1/virtual-piano/",
+			code: "https://github.com/zhengis-alinur/virtual-piano-rs"
 		}
 	]
 	return (
