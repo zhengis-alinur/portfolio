@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
+import Projects from './pages/Projects';
 
 
 const App = () => {
@@ -11,6 +12,10 @@ const App = () => {
 				{
 						path: '/',
 						element: <Home />,
+				},
+				{
+						path: '/projects',
+						element: <Projects/>,
 				},]
 			}
 	]);

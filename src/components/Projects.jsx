@@ -1,4 +1,5 @@
-import SectionTitle from "../../../components/SectionTitle"
+import { Link } from "react-router-dom"
+import SectionTitle from "./SectionTitle"
 
 const Project = ({project}) => (
 	<div className="border-2 w-3/4 max-w-1/3 border-gray h-fit md:w-48">
@@ -17,7 +18,7 @@ const Project = ({project}) => (
 		</div>
 	</div>
 )
-const Projects = () => {
+const Projects = ({full}) => {
 	const projects = [
 		{
 			picture: "opinius.jpg",
@@ -50,13 +51,32 @@ const Projects = () => {
 			description:"Awesome fullstack app",
 			deploy: "https://itransition-task-6-frontend.onrender.com/",
 			code: "https://github.com/zhengis-alinur/mern-chat"
+		},
+		{
+			picture: "mntn.jpg",
+			stack:  ['Vite', 'React', 'Tailwind'],
+			name: "MNTN Landing Page",
+			description:"Landing Page",
+			deploy: "https://mntn-landing.onrender.com/",
+			code: "https://github.com/zhengis-alinur/mntn-landing"
+		},
+		{
+			picture: "teacher.jpg",
+			stack:  ['Vite', 'React', 'Tailwind'],
+			name: "Teacher Landing Page",
+			description:"Landing Page",
+			deploy: "https://aiym.onrender.com/",
+			code: "https://github.com/zhengis-alinur/aiym-page"
 		}
 	]
 	return (
 		<div id="works">
-			<SectionTitle title='projects'/>
+			<div className="flex w-full justify-between items-center">
+				<SectionTitle title='projects'/>
+				{!full && <Link to="/projects"><span>View All</span></Link>}
+			</div>
 			<div className="flex flex-col items-center justify-center flex-wrap gap-5 md:flex-row md:items-start" >
-				{projects.map((project, index) => <Project key={index} project={project}/>)}
+				{projects.map((project, index) => full ? <Project key={index} project={project}/> : index < 4 && <Project key={index} project={project}/>)}
 			</div>
 		</div>
 	)
