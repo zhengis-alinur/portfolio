@@ -22,7 +22,7 @@ const Experience = () => {
     {
       company: "EPAM Systems",
       active: true,
-      deadlines: "november 2023 - current",
+      deadlines: "november 2023 - present",
       position: "Full-stack Software Engineer",
       description:
         "While interning at iTransition in the field of frontend development, I am developing full-stack applications based on Node.js and React. My goal is to gain practical skills in creating web servers and strengthen my knowledge in frontend development.",
