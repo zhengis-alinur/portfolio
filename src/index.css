@@ -2,13 +2,231 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-	background-color: #282C33;
-	overflow-x: hidden;
+:root {
+	--bg: #282C33;
+	--primary: #C778DD;
+	--gray: #ABB2BF;
+	--line: #454B55;
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	color-scheme: dark;
 }
 
-* {
-	font-family: Firo, monospace;
-	color: white;
-	font-weight: 500;
+@layer base {
+	html {
+		background-color: var(--bg);
+		scroll-padding-top: 5.5rem;
+		scrollbar-color: var(--line) var(--bg);
+		-webkit-text-size-adjust: 100%;
+	}
+
+	body {
+		@apply bg-background font-sans text-white antialiased;
+		overflow-x: hidden;
+		caret-color: var(--primary);
+	}
+
+	h1, h2, h3, code, kbd {
+		@apply font-mono;
+	}
+
+	h1, h2, h3 {
+		text-wrap: balance;
+	}
+
+	p {
+		text-wrap: pretty;
+	}
+
+	::selection {
+		background-color: rgb(199 120 221 / 0.35);
+		color: #fff;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 3px;
+	}
+
+	a {
+		text-underline-offset: 0.25em;
+		text-decoration-thickness: 1px;
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+	}
+	::-webkit-scrollbar-track {
+		background: var(--bg);
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--line);
+		border: 2px solid var(--bg);
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--gray);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+/*
+ * Reveal system. Content is visible by default; the hidden start state only
+ * applies once the inline script has marked the document with `.js`.
+ */
+.js [data-reveal] {
+	transition-property: opacity, transform, filter, clip-path;
+	transition-duration: 700ms;
+	transition-timing-function: var(--ease-out);
+	transition-delay: var(--d, 0ms);
+}
+.js [data-reveal]:not(.is-in) {
+	opacity: 0;
+}
+.js [data-reveal="up"]:not(.is-in) {
+	transform: translate3d(0, 24px, 0);
+}
+.js [data-reveal="left"]:not(.is-in) {
+	transform: translate3d(-20px, 0, 0);
+}
+.js [data-reveal="blur"]:not(.is-in) {
+	filter: blur(10px);
+	transform: translate3d(0, 6px, 0);
+}
+/* The wrapper is observed and the child clipped: a clipped target never intersects. */
+.js [data-reveal="mask"]:not(.is-in) {
+	opacity: 1;
+}
+.js [data-reveal="mask"] > * {
+	clip-path: inset(0 0 0 0);
+	transition: clip-path 1100ms var(--ease-out) var(--d, 0ms);
+}
+.js [data-reveal="mask"]:not(.is-in) > * {
+	clip-path: inset(100% 0 0 0);
+}
+.js [data-reveal="draw"] {
+	transform-origin: left center;
+	transition-duration: 900ms;
+}
+.js [data-reveal="draw"]:not(.is-in) {
+	opacity: 1;
+	transform: scaleX(0);
+}
+
+/* Hero headline: each line rises out of its own mask. */
+.line-mask {
+	display: block;
+	overflow: hidden;
+	padding-bottom: 0.08em;
+}
+.line-mask > span {
+	display: inline-block;
+	transition: transform 900ms var(--ease-out);
+	transition-delay: var(--d, 0ms);
+}
+.js .is-booting .line-mask > span {
+	transform: translate3d(0, 110%, 0);
+	transition: none;
+}
+
+/* Dot grids pop in along the diagonal. */
+.dots circle {
+	transform-box: fill-box;
+	transform-origin: center;
+	transition: transform 500ms var(--ease-out);
+	transition-delay: calc(var(--i) * 35ms + var(--d, 0ms));
+}
+.js .dots:not(.is-in) circle {
+	transform: scale(0);
+}
+
+.caret {
+	display: inline-block;
+	width: 0.55em;
+	height: 1.1em;
+	margin-left: 1px;
+	vertical-align: -0.2em;
+	background: var(--primary);
+	animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+	50% { opacity: 0; }
+}
+
+.status-dot::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: var(--primary);
+	animation: status-ping 2.4s var(--ease-out) infinite;
+}
+@keyframes status-ping {
+	0% { transform: scale(1); opacity: 0.7; }
+	70%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+.drift {
+	animation: drift 9s ease-in-out infinite alternate;
+}
+.drift-slow {
+	animation: drift 13s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift {
+	from { translate: 0 0; }
+	to { translate: 0 -14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js [data-reveal],
+	.line-mask > span,
+	.dots circle {
+		transition-duration: 200ms !important;
+		transition-delay: 0ms !important;
+	}
+	.js [data-reveal="mask"] > * {
+		transition-duration: 200ms;
+		transition-delay: 0ms;
+	}
+	.js [data-reveal="mask"]:not(.is-in) > * {
+		clip-path: none;
+	}
+	.js [data-reveal]:not(.is-in) {
+		transform: none !important;
+		filter: none !important;
+		clip-path: none !important;
+	}
+	.js .is-booting .line-mask > span,
+	.js .dots:not(.is-in) circle {
+		transform: none;
+	}
+	.caret,
+	.status-dot::after,
+	.drift,
+	.drift-slow {
+		animation: none;
+	}
+}
+
+/* The social rope drops from the top edge on load, then its links follow. */
+.js .rope-line {
+	transform-origin: top;
+	animation: rope-drop 1100ms var(--ease-out) 300ms both;
+}
+.js .rope-item {
+	animation: rope-item 600ms var(--ease-out) var(--d, 0ms) both;
+}
+@keyframes rope-drop {
+	from { transform: scaleY(0); }
+}
+@keyframes rope-item {
+	from { opacity: 0; transform: translate3d(0, -8px, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.js .rope-line,
+	.js .rope-item {
+		animation: none;
+	}
 }

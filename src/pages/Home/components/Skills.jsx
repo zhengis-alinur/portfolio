@@ -1,83 +1,42 @@
-import SectionTitle from "../../../components/SectionTitle"
-import StyleGroups from "../../../components/StyleGroups"
+import SectionTitle from '../../../components/SectionTitle'
+import StyleGroups from '../../../components/StyleGroups'
+import { skills } from '../../../data/profile'
+import { useLocale } from '../../../i18n'
 
-import Nodejs from "../../../icons/Nodejs"
-import React from "../../../icons/React"
-import Redux from "../../../icons/Redux"
-import Tailwind from "../../../icons/Tailwind"
-import Typescript from "../../../icons/Typescript"
-import HTML from "../../../icons/HTML"
-import Express from "../../../icons/Express"
-
-const Skill = ({area, technologies}) => (<div className="flex flex-col w-full max-w-full md:max-w-[200px] h-fit border-2 border-gray">
-	<p className="p-3 font-bold border-b-2 border-gray">
-		{area}
-	</p>
-	<div className="flex flex-wrap p-3 gap-3">
-		{technologies.map((technology, index) => <span key={index} className="text-gray">{technology}</span>)}
-	</div>
-</div>)
+const SkillGroup = ({ area, items, wide, index }) => (
+	<li
+		data-reveal="up"
+		style={{ '--d': `${index * 80}ms` }}
+		className={`group border border-line transition-colors duration-300 hover:border-primary ${wide ? 'sm:col-span-2' : ''}`}
+	>
+		<h3 className="border-b border-line px-4 py-3 text-base font-semibold transition-colors duration-300 group-hover:border-primary">
+			<span className="text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true">#</span>
+			{area}
+		</h3>
+		<ul className="flex flex-wrap gap-x-4 gap-y-2 p-4">
+			{items.map((item) => (
+				<li key={item} className="text-gray transition-colors duration-200 hover:text-white">{item}</li>
+			))}
+		</ul>
+	</li>
+)
 
 const Skills = () => {
-	const technologies = [
-		[
-			{
-				area: "Languages",
-				technologies: ["Typescript", "Javascipt", "Java SE8"]
-			},
-		],
-		[
-			{
-				area: "Frameworks",
-				technologies: ["React.js","Express.js", "Tailwind"]
-			},
-			{
-				area: "Tools",
-				technologies: ["Git","Github", "npm", "SASS"]
-			}
-		],
-			[
-				{
-					area: "Libraries",
-					technologies: ["Redux","Redux Toolkit(query)"]
-				},
-				{
-					area: "Databases",
-					technologies: ["MongoDB","MySQL", "Sequelize"]
-				},
-				{
-					area: "Additional info",
-					technologies: ["Node.js","HTML", "CSS", "Python"]
-				},
-			]
-		]
-		return (
-		<div id="skills">
-			<SectionTitle title='skills'/>
-			<div className="flex items-center justify-around relative">
-				<StyleGroups className="hidden md:block" />
-				<div className="absolute hidden w-1/2 top-0 left-0 h-full md:block">
-					<Nodejs className="absolute left-20 top-80"/>
-					<React className="absolute left-1/3"/>
-					<Redux className="absolute top-1/2 left-10"/>
-					<Express className="absolute right-36 bottom-36"/>
-					<Tailwind className="absolute left-1/3 top-36"/>
-					<Typescript className="absolute right-1/4 top-10"/>
-					<HTML className="absolute left-20 top-20"/>
-				</div>
-				<div className="flex flex-col gap-3 items-center md:flex-row">
-					{
-						technologies.map((group, index) => 
-							<div key={index} className="flex flex-col w-full gap-3">
-								{group.map((tech, index) => <Skill key={index} {...tech}/>)}
-							</div>
-						)
-					}
-					
-				</div>
+	const { t } = useLocale()
+
+	return (
+		<section id="skills" aria-labelledby="skills-title" className="py-16 md:py-24">
+			<SectionTitle id="skills-title" title={t.sections.skills} />
+			<div className="grid items-center gap-12 lg:grid-cols-[minmax(0,20rem)_1fr]">
+				<StyleGroups className="drift-slow hidden h-auto w-full lg:block" />
+				<ul className="grid gap-3 sm:grid-cols-2">
+					{skills.map((group, index) => (
+						<SkillGroup key={group.id} index={index} area={t.skills[group.id]} {...group} />
+					))}
+				</ul>
 			</div>
-		</div>
-  )
+		</section>
+	)
 }
 
 export default Skills

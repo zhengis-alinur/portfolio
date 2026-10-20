@@ -1,48 +1,56 @@
-import SectionTitle from "../../../components/SectionTitle";
-import Dots from "../../../components/Dots";
+import SectionTitle from '../../../components/SectionTitle'
+import Dots from '../../../components/Dots'
+import { education, profile } from '../../../data/profile'
+import { useLocale } from '../../../i18n'
+
+const b = (text) => <strong className="font-medium text-white">{text}</strong>
 
 const AboutMe = () => {
-  return (
-    <div id="about-me">
-      <SectionTitle title="about-me" />
-      <div className="flex flex-col justify-around items-center md:flex-row gap-10">
-        <div className="relative w-3/4 md:w-1/3">
-          <Dots className="absolute right-10 top-10 z-1" />
-          <img className="relative z-1 w-96" src="/about.png" />
-          <Dots className="absolute bottom-10 left-[-20px]" />
-        </div>
-        <div className="">
-          <p>Hello, i’m Alinur!</p>
-          <p>&nbsp;</p>
-          <p className="text-gray">
-            Junior Javascript fullstack developer with internship experience at
-            large companies such as{" "}
-            <span className="text-white font-bold">Yandex</span> and{" "}
-            <span className="text-white font-bold">Itransition</span> as a web
-            developer.
-          </p>
-          <p>&nbsp;</p>
-          <p className="text-gray">
-            I'm a Fullstack Developer at{" "}
-            <span className="text-white font-bold">Epam Systems</span>,
-            embarking on a captivating adventure in my first role at this
-            position.
-          </p>
-          <p>&nbsp;</p>
-          <p className="text-gray">
-            I enjoy working in a team and can adapt to changes because it's
-            important for me to be a reliable and valuable team member.
-          </p>
-          <p>&nbsp;</p>
-          <p className="text-white">
-            I'm always open to offers and to become a part of strong team,
-            create interesting products, and make my valuable contribution to
-            their development
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
+	const { t } = useLocale()
+	const { paragraphs } = t.about
 
-export default AboutMe;
+	return (
+		<section id="about-me" aria-labelledby="about-title" className="py-16 md:py-24">
+			<SectionTitle id="about-title" title={t.sections['about-me']} />
+			<div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+				<div className="relative mx-auto w-full max-w-[22rem] lg:order-2 lg:mr-0">
+					<Dots className="absolute right-6 top-8" />
+					<div data-reveal="mask" className="relative">
+						<img className="w-full" src="/about.webp" width="900" height="1078" loading="lazy" alt={t.about.photoAlt} />
+					</div>
+					<Dots className="absolute -left-5 bottom-10" delay={300} />
+				</div>
+
+				<div className="flex max-w-[64ch] flex-col gap-5 text-lg leading-relaxed">
+					<p data-reveal="up" className="font-mono text-xl text-white">{t.about.hello}</p>
+					{paragraphs.map((paragraph, index) => (
+						<p
+							key={index}
+							data-reveal="up"
+							style={{ '--d': `${(index + 1) * 80}ms` }}
+							className={index === paragraphs.length - 1 ? 'text-white' : 'text-gray'}
+						>
+							{paragraph(b)}
+						</p>
+					))}
+
+					<dl data-reveal="up" style={{ '--d': '320ms' }} className="mt-4 grid gap-px border border-line bg-line text-base sm:grid-cols-2">
+						{education.map((item) => (
+							<div key={item.id} className="flex flex-col gap-1 bg-background p-4">
+								<dt className="font-mono text-sm text-primary tabular-nums">{item.period}</dt>
+								<dd className="text-white">{t.about.education[item.id].school}</dd>
+								<dd className="text-sm text-gray">{t.about.education[item.id].degree}</dd>
+							</div>
+						))}
+						<div className="flex flex-col gap-1 bg-background p-4 sm:col-span-2 sm:flex-row sm:justify-between">
+							<dt className="font-mono text-sm text-primary">{t.about.language}</dt>
+							<dd className="text-gray">{t.about.english(profile.english)}</dd>
+						</div>
+					</dl>
+				</div>
+			</div>
+		</section>
+	)
+}
+
+export default AboutMe

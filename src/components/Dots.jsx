@@ -1,33 +1,22 @@
-const Dots = (props) => {
-  return (
-	<svg className={props.className} width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<circle cx="2" cy="2" r="2" fill="#ABB2BF"/>
-		<circle cx="22" cy="2" r="2" fill="#ABB2BF"/>
-		<circle cx="42" cy="2" r="2" fill="#ABB2BF"/>
-		<circle cx="62" cy="2" r="2" fill="#ABB2BF"/>
-		<circle cx="82" cy="2" r="2" fill="#ABB2BF"/>
-		<circle cx="2" cy="22" r="2" fill="#ABB2BF"/>
-		<circle cx="22" cy="22" r="2" fill="#ABB2BF"/>
-		<circle cx="42" cy="22" r="2" fill="#ABB2BF"/>
-		<circle cx="62" cy="22" r="2" fill="#ABB2BF"/>
-		<circle cx="82" cy="22" r="2" fill="#ABB2BF"/>
-		<circle cx="2" cy="42" r="2" fill="#ABB2BF"/>
-		<circle cx="22" cy="42" r="2" fill="#ABB2BF"/>
-		<circle cx="42" cy="42" r="2" fill="#ABB2BF"/>
-		<circle cx="62" cy="42" r="2" fill="#ABB2BF"/>
-		<circle cx="82" cy="42" r="2" fill="#ABB2BF"/>
-		<circle cx="2" cy="62" r="2" fill="#ABB2BF"/>
-		<circle cx="22" cy="62" r="2" fill="#ABB2BF"/>
-		<circle cx="42" cy="62" r="2" fill="#ABB2BF"/>
-		<circle cx="62" cy="62" r="2" fill="#ABB2BF"/>
-		<circle cx="82" cy="62" r="2" fill="#ABB2BF"/>
-		<circle cx="2" cy="82" r="2" fill="#ABB2BF"/>
-		<circle cx="22" cy="82" r="2" fill="#ABB2BF"/>
-		<circle cx="42" cy="82" r="2" fill="#ABB2BF"/>
-		<circle cx="62" cy="82" r="2" fill="#ABB2BF"/>
-		<circle cx="82" cy="82" r="2" fill="#ABB2BF"/>
+const SIZE = 5;
+const GAP = 20;
+const cells = Array.from({ length: SIZE * SIZE }, (_, n) => ({ row: Math.floor(n / SIZE), col: n % SIZE }));
+
+// A 5×5 dot grid; `.dots` circles pop in along the diagonal when it scrolls into view.
+const Dots = ({ className = '', delay = 0 }) => (
+	<svg
+		className={`dots ${className}`}
+		style={{ '--d': `${delay}ms` }}
+		width="84"
+		height="84"
+		viewBox="0 0 84 84"
+		fill="none"
+		aria-hidden="true"
+	>
+		{cells.map(({ row, col }) => (
+			<circle key={`${row}-${col}`} cx={2 + col * GAP} cy={2 + row * GAP} r="2" fill="#ABB2BF" style={{ '--i': row + col }} />
+		))}
 	</svg>
-  )
-}
+);
 
 export default Dots

@@ -1,79 +1,88 @@
-import SectionTitle from "../../../components/SectionTitle";
+import { useCallback, useRef, useState } from 'react'
+import SectionTitle from '../../../components/SectionTitle'
+import { jobs } from '../../../data/profile'
+import { useScrollFrame } from '../../../hooks/motion'
+import { PinIcon } from '../../../icons/Ui'
+import { formatPeriod, useLocale } from '../../../i18n'
 
-const Job = ({ job }) => (
-  <div
-    className={`flex flex-col px-6 flex-start items-center md:items-start mx-2 md:mx-10 `}
-  >
-    <div className="flex flex-col md:flex-row">
-      <p className="font-bold whitespace-nowrap text-xl text-center border-b-2 text-primary border-primary py-2">
-        {job.company}
-      </p>
-      <p className="text-xl border-b-2 whitespace-nowrap border-primary py-2  pl-6 w-fit pr-5">
-        {job.position}
-      </p>
-    </div>
-    <p className="whitespace-nowrap text-primary  py-2">{job.deadlines}</p>
-    <p className="py-2  pl-6 text-gray">{job.description}</p>
-  </div>
-);
+const Job = ({ job, reached, t }) => (
+	<li data-node className="relative pb-14 pl-8 last:pb-0 sm:pl-12">
+		<span
+			aria-hidden="true"
+			className={`absolute left-[-5px] top-2 h-[11px] w-[11px] border transition-[background-color,border-color,transform] duration-500 ease-out ${
+				reached ? 'scale-100 border-primary bg-primary' : 'scale-75 border-gray bg-background'
+			} ${job.current ? 'status-dot' : ''}`}
+		/>
+		<article data-reveal="left" className="grid gap-x-10 gap-y-3 md:grid-cols-[1fr_auto]">
+			<header className="flex flex-col gap-1 md:col-start-1">
+				<h3 className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xl font-semibold sm:text-2xl">
+					<span className="text-primary">{job.company}</span>
+					{job.project && <span className="border border-line px-2 py-0.5 text-xs font-normal text-gray">{t.experience.project}</span>}
+				</h3>
+				<p className="font-mono text-base text-white">{job.role}</p>
+			</header>
+			<div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-sm text-gray md:col-start-2 md:row-start-1 md:flex-col md:items-end md:pt-1.5">
+				<span className="tabular-nums">{formatPeriod(t, job.start, job.end)}</span>
+				{job.place && (
+					<span className="inline-flex items-center gap-1">
+						<PinIcon className="h-3.5 w-3.5" />
+						{t.places[job.place]}
+					</span>
+				)}
+			</div>
+			<ul className="flex max-w-[68ch] flex-col gap-2.5 pt-2 md:col-span-2">
+				{t.experience.points[job.id].map((point) => (
+					<li key={point} className="relative pl-5 leading-relaxed text-gray before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-primary">
+						{point}
+					</li>
+				))}
+			</ul>
+			<ul aria-label={t.ui.stack} className="flex flex-wrap gap-2 pt-2 md:col-span-2">
+				{job.stack.map((tech) => (
+					<li key={tech} className="border border-line px-2 py-1 font-mono text-xs text-gray">{tech}</li>
+				))}
+			</ul>
+		</article>
+	</li>
+)
 
 const Experience = () => {
-  const jobs = [
-    {
-      company: "EPAM Systems",
-      active: true,
-      deadlines: "november 2023 - present",
-      position: "Full-stack Software Engineer",
-      description:
-        "While interning at iTransition in the field of frontend development, I am developing full-stack applications based on Node.js and React. My goal is to gain practical skills in creating web servers and strengthen my knowledge in frontend development.",
-    },
-    {
-      company: "Itransition",
-      deadlines: "july 2023 - september 2023",
-      position: "Software Engineer Intern",
-      description:
-        "While interning at iTransition in the field of frontend development, I am developing full-stack applications based on Node.js and React. My goal is to gain practical skills in creating web servers and strengthen my knowledge in frontend development.",
-    },
-    {
-      company: "Yandex Market",
-      deadlines: "march 2023 - may 2023",
-      position: "Frontend Developer Intern",
-      description:
-        "During my work at Yandex Market, I was responsible for creating key dynamic elements and components, as well as writing tests using React, Redux, RxJS, and Flow/Typescript. My work significantly improved the functionality of server communication and simplified its development in the future. I worked as part of a team and successfully collaborated with colleagues, which allowed me to gain valuable experience, achieve good results, and receive a recommendation from my employer.",
-    },
-    {
-      company: "Bukable",
-      deadlines: "september 2022 - december 2022",
-      position: "Frontend Developer Intern",
-      description:
-        "At the Bukable startup, I developed authentication, authorization, and confirmation pages using Next.js, Redux Toolkit, and SCSS technologies.",
-    },
-    {
-      company: "EuroEducation",
-      deadlines: "september 2021 - december 2021",
-      position: "Physics/Math teacher",
-      description:
-        "EuroEducation is an educational institution specializing in preparing school students for entrance exams to specialized schools. By profession, I am a physicist, and my task was to teach students physics and mathematics.",
-    },
-    {
-      company: "Robopolis",
-      deadlines: "september 2019 - january 2020",
-      position: "Arduino Bots teacher",
-      description:
-        "I taught children microcontroller programming and robot construction.",
-    },
-  ];
+	const { t } = useLocale()
+	const listRef = useRef(null)
+	const fillRef = useRef(null)
+	const [reached, setReached] = useState(0)
 
-  return (
-    <div id="experience">
-      <SectionTitle title="experience" />
-      <div className="flex flex-col gap-4">
-        {jobs.map((job, index) => (
-          <Job key={index} job={job} />
-        ))}
-      </div>
-    </div>
-  );
-};
+	// The rail fills up to a line 60% down the viewport; markers above that line light up.
+	const onFrame = useCallback(() => {
+		const list = listRef.current
+		if (!list) return
+		const anchor = window.innerHeight * 0.6
+		const rect = list.getBoundingClientRect()
+		const progress = Math.min(Math.max((anchor - rect.top) / rect.height, 0), 1)
+		fillRef.current.style.transform = `scaleY(${progress})`
 
-export default Experience;
+		let count = 0
+		list.querySelectorAll('[data-node]').forEach((node) => {
+			if (node.getBoundingClientRect().top + 8 < anchor) count += 1
+		})
+		setReached(count)
+	}, [])
+	useScrollFrame(onFrame)
+
+	return (
+		<section id="experience" aria-labelledby="experience-title" className="py-16 md:py-24">
+			<SectionTitle id="experience-title" title={t.sections.experience} />
+			<div className="relative ml-1">
+				<div aria-hidden="true" className="absolute bottom-0 left-0 top-2 w-px bg-line" />
+				<div ref={fillRef} aria-hidden="true" className="absolute bottom-0 left-0 top-2 w-px origin-top bg-primary" style={{ transform: 'scaleY(0)' }} />
+				<ol ref={listRef}>
+					{jobs.map((job, index) => (
+						<Job key={job.id} job={job} t={t} reached={index < reached} />
+					))}
+				</ol>
+			</div>
+		</section>
+	)
+}
+
+export default Experience
